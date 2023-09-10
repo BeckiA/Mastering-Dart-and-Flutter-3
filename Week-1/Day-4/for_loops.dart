@@ -3,7 +3,7 @@ void main(List<String> args) {
   var mySets = {'x', 'y', 'z'};
   var myMaps = {'k': 0, 'l': 1, 'm': 2};
 
-  // 1. Looping through Lists
+  // 1. Looping through Lists using Iterables with in
   for (final letter in myList) {
     print(letter);
   }
@@ -23,7 +23,7 @@ void main(List<String> args) {
     print('The value for key $key is $value');
   });
 
-  // 4. for loops based on iterations
+  // 4. for loops based on iterations using incrementation
   for (var i = 0; i < myList.length; i++) {
     print(i);
   }
