@@ -1,25 +1,25 @@
 void main(List<String> args) {
-  // print("Good Morning, Becki");
+  print("Good Morning, Becki");
 
   // #1
   var result = myFunction(1, 2);
-  // print('Result: $result');
+  print('Result: $result');
 
   // #2
   String callingName = nameGenerator("George", 'Washington');
-  // print(callingName);
+  print(callingName);
 
   // #3
   var printName = callName(firstName: 'Bereket', lastName: 'Abera');
-  // print(printName);
+  print(printName);
 
   // #4
   String salute = salutePresident(firstName: "George", lastName: 'Washington');
-  // print(salute);
+  print(salute);
 
   // #5 Case 1: If the user forgets to pass both arguements
   String greet = greetPresident();
-  // print(greet);
+  print(greet);
 
   // Case 2: Setting default values to the first name but not to the last name
   String greetings = greetPresident(firstName: "Abebe");
