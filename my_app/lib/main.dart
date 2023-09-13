@@ -2,11 +2,13 @@
 import 'package:flutter/material.dart';
 
 void main(List<String> args) {
-  runApp(Center(
-    child: Text(
-      "Hello this is my first app",
-      textDirection: TextDirection.ltr,
-      style: TextStyle(color: Colors.orange, fontSize: 50),
-    ),
+  runApp(MaterialApp(
+    theme:
+        ThemeData(primaryColor: Colors.blueGrey, brightness: Brightness.dark),
+    home: Scaffold(
+        appBar: AppBar(
+          title: const Text('AppBar Title'),
+        ),
+        body: const Center(child: Text("Hello World"))),
   ));
 }
