@@ -1,26 +1,37 @@
 import 'package:flutter/material.dart';
 
 void main() => runApp(MaterialApp(
-      home: MyHomePage(),
+      home: Counter(),
     ));
 
-class MyHomePage extends StatefulWidget {
+class Counter extends StatefulWidget {
   @override
-  State<MyHomePage> createState() => _MyHomePage();
+  State<Counter> createState() => _Counter();
 }
 
-class _MyHomePage extends State<MyHomePage> {
-  // Variable Initalization
-  bool _isButoonPressed = false;
+class _Counter extends State<Counter> {
+  int _number = 0;
+  void _increment() {
+    setState(() {
+      _number += 1;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: GestureDetector(
-          onTap: () => setState(() {
-                _isButoonPressed = !_isButoonPressed;
-                print("It get turned");
-              }),
-          child: Container(color: _isButoonPressed ? Colors.blue : Colors.red)),
+      body: Center(
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            TextButton(onPressed: _increment, child: const Text("Push Me")),
+            const SizedBox(
+              width: 5,
+            ),
+            Text("You have pressed the button  $_number times")
+          ],
+        ),
+      ),
     );
   }
 }
