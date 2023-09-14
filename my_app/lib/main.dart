@@ -1,14 +1,26 @@
 import 'package:flutter/material.dart';
 
-void main() => runApp(
-      MaterialApp(
-        home: MyWidget(),
-      ),
-    );
+void main() => runApp(MaterialApp(
+      home: MyHomePage(),
+    ));
 
-class MyWidget extends StatelessWidget {
+class MyHomePage extends StatefulWidget {
   @override
-  Widget build(BuildContext context) => Scaffold(
-        body: Container(color: Colors.red),
-      );
+  State<MyHomePage> createState() => _MyHomePage();
+}
+
+class _MyHomePage extends State<MyHomePage> {
+  // Variable Initalization
+  bool _isButoonPressed = false;
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      body: GestureDetector(
+          onTap: () => setState(() {
+                _isButoonPressed = !_isButoonPressed;
+                print("It get turned");
+              }),
+          child: Container(color: _isButoonPressed ? Colors.blue : Colors.red)),
+    );
+  }
 }
