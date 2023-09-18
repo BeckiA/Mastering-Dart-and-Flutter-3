@@ -1,66 +1,83 @@
 import 'package:flutter/material.dart';
 
-class Todo {
-  final String title;
-  final String description;
-  Todo({required this.title, required this.description});
+void main() => runApp(MyApp());
+
+class MyApp extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      title: 'Data Sending in Flutter',
+      home: MyHomeScreen(),
+    );
+  }
 }
 
-List<Todo> _todoList = [
-  Todo(title: "Pray and BS", description: "Study Exodus Chapter 6 and 7"),
-  Todo(
-      title: 'Mastering Flutter and Dart',
-      description: 'Try to finish the Navigation module'),
-  Todo(title: 'Make Calls', description: 'Try to catch Bereket and Mr.Gizate'),
-];
+class MyHomeScreen extends StatefulWidget {
+  @override
+  _MyHomeScreen createState() => _MyHomeScreen();
+}
 
-void main() => runApp(MaterialApp(
-      title: 'Todo App',
-      home: TodoScreen(todos: _todoList),
-    ));
+class _MyHomeScreen extends State<MyHomeScreen> {
+  String _value = '';
 
-class TodoScreen extends StatelessWidget {
-  TodoScreen({Key? key, required this.todos}) : super(key: key);
+  // Method that recieves the selected text back to the Home Screen
+  _selectedText() async {
+    var result = await Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) => SelectedScreen(),
+        ));
 
-  List<Todo> todos;
+    setState(() {
+      _value = result;
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Tasks TODO'),
+        title: const Text('Home Screen'),
       ),
-      body: ListView.builder(
-        itemCount: todos.length,
-        itemBuilder: (context, index) {
-          return ListTile(
-            leading: const Icon(Icons.task),
-            title: Text(todos[index].title),
-            onTap: () => Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => DetailScreen(todo: todos[index]),
-                )),
-          );
-        },
+      body: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Center(
+            child: Text('Selected Text: $_value'),
+          ),
+          Center(
+            child: ElevatedButton(
+                onPressed: _selectedText,
+                child: const Text('GO TO SELECTION SCREEN')),
+          ),
+        ],
       ),
     );
   }
 }
 
-class DetailScreen extends StatelessWidget {
-  DetailScreen({Key? key, required this.todo}) : super(key: key);
-
-  final Todo todo;
-
+class SelectedScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(todo.title),
+        title: const Text('Pick an Option'),
       ),
       body: Center(
-        child: Text(todo.description),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            ElevatedButton(
+                onPressed: () => Navigator.pop(context, "Option 1"),
+                child: const Text('Option 1')),
+            const SizedBox(
+              height: 20,
+            ),
+            ElevatedButton(
+                onPressed: () => Navigator.pop(context, "Option 2"),
+                child: const Text('Option 2')),
+          ],
+        ),
       ),
     );
   }
