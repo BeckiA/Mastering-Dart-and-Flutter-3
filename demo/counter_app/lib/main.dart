@@ -3,90 +3,101 @@ import 'package:path_provider/path_provider.dart';
 import 'dart:async';
 import 'dart:io';
 
-void main() => runApp(MaterialApp(
-      title: 'Counter Demo',
-      home: FlutterDemo(storage: CounterStorage()),
-    ));
+// MAIN
+void main() {
+  runApp(MaterialApp(
+    title: 'User Registration Demo',
+    home: UserRegistration(storage: UserStorage()),
+  ));
+}
 
-class CounterStorage {
-  // GET THE DOCUMENT DIRECTORY AppData
-  Future<String> get _localPath async {
+class UserStorage {
+  // PATH
+  Future<String> get _localpath async {
     final directory = await getApplicationDocumentsDirectory();
-
     return directory.path;
   }
 
-  // TXT FILE INSIDE of DOC DIR
+  //File
   Future<File> get _localFile async {
-    final path = await _localPath;
-
-    return File('$path/counter.txt');
+    final file = await _localpath;
+    return File('$file/userInput.txt');
   }
 
-  // READ WHAT'S INSIDE counter.txt
-  Future<int> readCounter() async {
+  // READ INSIDE THE FILE
+
+  Future<String> readUserInput() async {
     try {
       final file = await _localFile;
       final content = await file.readAsString();
-      return int.parse(content);
-    } catch (error) {
-      return 0; //First time the app is opened
+      return content;
+    } catch (e) {
+      return '';
     }
   }
 
-  // WRITE THE COUNTER TO counter.txt
-
-  Future<File> writeCounter(int counter) async {
+  // WRITING INTO THE FILE
+  Future<File> writeUserInput(String userInput) async {
     final file = await _localFile;
-
-    return file.writeAsString('$counter');
+    return file.writeAsString('$userInput');
   }
 }
 
-class FlutterDemo extends StatefulWidget {
-  const FlutterDemo({super.key, required this.storage});
+// StateFull Widget
+class UserRegistration extends StatefulWidget {
+  const UserRegistration({Key? key, required this.storage}) : super(key: key);
 
-  final CounterStorage storage;
-
-  @override
-  _FlutterDemoState createState() => _FlutterDemoState();
+  final UserStorage storage;
+  _UserRegistrationState createState() => _UserRegistrationState();
 }
 
-class _FlutterDemoState extends State<FlutterDemo> {
-  int _counter = 0;
+class _UserRegistrationState extends State<UserRegistration> {
+  final userNameController = TextEditingController();
+  final passwordController = TextEditingController();
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
-
-    widget.storage.readCounter().then((value) {
+    widget.storage.readUserInput().then((value) {
       setState(() {
-        _counter = value;
+        userNameController.text = value;
       });
     });
   }
 
-  Future<File> _incrementCounter() {
-    setState(() {
-      _counter++;
-    });
-
-    return widget.storage.writeCounter(_counter);
+  // SAVE USERINPUT'S
+  Future<File> _saveUserInput() {
+    return widget.storage.writeUserInput(userNameController.text);
   }
 
-  @override
+  // SCAFFOLD
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Counters and File Storages'),
+        title: Text(userNameController.text.isEmpty
+            ? 'Saving User Datas'
+            : userNameController.text),
       ),
-      body: Center(
-        child: Text('You have pressed $_counter times'),
+      body: Padding(
+        padding: const EdgeInsets.all(10),
+        child: Center(
+          child: Column(
+            children: [
+              TextFormField(
+                controller: userNameController,
+                decoration: const InputDecoration(hintText: 'Username'),
+              )
+            ],
+          ),
+        ),
       ),
       floatingActionButton: FloatingActionButton(
-        onPressed: _incrementCounter,
-        child: const Icon(Icons.add),
+        onPressed: () {
+          setState(() {
+            _saveUserInput;
+          });
+        },
+        child: const Icon(Icons.save),
       ),
     );
   }
