@@ -5,7 +5,7 @@ import 'dart:io';
 
 void main() => runApp(MaterialApp(
       title: 'Counter Demo',
-      // home: FlutterDemo(storage: counter),
+      home: FlutterDemo(storage: CounterStorage()),
     ));
 
 class CounterStorage {
@@ -33,6 +33,14 @@ class CounterStorage {
       return 0; //First time the app is opened
     }
   }
+
+  // WRITE THE COUNTER TO counter.txt
+
+  Future<File> writeCounter(int counter) async {
+    final file = await _localFile;
+
+    return file.writeAsString('$counter');
+  }
 }
 
 class FlutterDemo extends StatefulWidget {
@@ -45,8 +53,41 @@ class FlutterDemo extends StatefulWidget {
 }
 
 class _FlutterDemoState extends State<FlutterDemo> {
+  int _counter = 0;
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+
+    widget.storage.readCounter().then((value) {
+      setState(() {
+        _counter = value;
+      });
+    });
+  }
+
+  Future<File> _incrementCounter() {
+    setState(() {
+      _counter++;
+    });
+
+    return widget.storage.writeCounter(_counter);
+  }
+
   @override
   Widget build(BuildContext context) {
-    return Center(child: const Text('CENTER'));
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text('Counters and File Storages'),
+      ),
+      body: Center(
+        child: Text('You have pressed $_counter times'),
+      ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: _incrementCounter,
+        child: const Icon(Icons.add),
+      ),
+    );
   }
 }
