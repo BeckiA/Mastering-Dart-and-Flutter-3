@@ -27,9 +27,9 @@ class Photos {
   }
 }
 
-Future<Photos> fetchPhotos() async {
+Future<Photos> fetchPhotos(int albumId) async {
   final response = await http
-      .get(Uri.parse('https://jsonplaceholder.typicode.com/photos/1'));
+      .get(Uri.parse('https://jsonplaceholder.typicode.com/photos/$albumId'));
 
   if (response.statusCode == 200) {
     return Photos.fromJson(jsonDecode(response.body));
@@ -52,10 +52,19 @@ class PhotoPreview extends StatefulWidget {
 
 class _PhotoPreviewState extends State<PhotoPreview> {
   late Future<Photos> photos;
+  final _albumIdController = TextEditingController();
+  void _fetchPhotos() {
+    final albumId = int.parse(_albumIdController.text);
+
+    setState(() {
+      photos = fetchPhotos(albumId);
+    });
+  }
+
   @override
   void initState() {
     super.initState();
-    photos = fetchPhotos();
+    photos = fetchPhotos(1);
   }
 
   Widget build(BuildContext context) {
@@ -65,20 +74,35 @@ class _PhotoPreviewState extends State<PhotoPreview> {
       ),
       body: Center(
         child: Container(
-          decoration: BoxDecoration(
-            border: Border.all(width: 1),
-          ),
-          child: FutureBuilder(
-              future: photos,
-              builder: (context, snapshot) {
-                if (snapshot.hasData) {
-                  return Text(snapshot.data!.title);
-                } else if (snapshot.hasError) {
-                  return Text('${snapshot.error}');
-                }
-                return const CircularProgressIndicator();
-              }),
-        ),
+            decoration: BoxDecoration(
+              border: Border.all(width: 1),
+            ),
+            child: Column(
+              children: [
+                TextFormField(
+                  controller: _albumIdController,
+                  decoration: const InputDecoration(
+                      hintText: 'Enter The Album Id Here!'),
+                  keyboardType: TextInputType.number,
+                ),
+                ElevatedButton(
+                    onPressed: _fetchPhotos, child: const Text("SUBMIT")),
+                FutureBuilder<Photos>(
+                    future: photos,
+                    builder: (context, snapshot) {
+                      // Will Display the title of Photo with the Album Id!
+                      if (snapshot.hasData) {
+                        return Text(snapshot.data!.title);
+                      }
+                      // If the Error Actually exist this will print the throw() code from fetchPhotos()
+                      else if (snapshot.hasError) {
+                        return Text('${snapshot.error}');
+                      }
+                      // Will Display The blue progress indicator until the future
+                      return const CircularProgressIndicator();
+                    })
+              ],
+            )),
       ),
     );
   }
